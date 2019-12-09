@@ -15,9 +15,6 @@ namespace Storage.Models
 
         public DbSet<Storage.Models.Product> Product { get; set; }
 
-        internal IEnumerable<Productview> Select(Func<object, object> p)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

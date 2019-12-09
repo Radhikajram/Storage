@@ -25,6 +25,7 @@ namespace Storage.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
+           
             return View(await _context.Product.ToListAsync());
         }
 
@@ -52,11 +53,20 @@ namespace Storage.Controllers
             return View();
         }
 
-        public IActionResult LimitedProduct()
+        public async Task<IActionResult>  LimitedProduct()
         {
-            // var model = new Productmenu();
-            _productview = _context.Product.ToList().Select(p => new { p.Name, p.Price, p.Count });
-            return View(model);
+           
+            IEnumerable<ProductView> inventoryList = await (from k in _context.Product select new ProductView { Name = k.Name, Price = k.Price, Count = k.Count, InventoryValue = k.Count * k.Price }).ToListAsync();
+
+            return View(inventoryList);
+        }
+
+        public async Task<IActionResult> Category(string category)
+        {
+
+            IEnumerable<ProductView> categoryList = await (from k in _context.Product  where(k.Category.StartsWith(category)) select new ProductView { Name = k.Name, Price = k.Price, Count = k.Count, InventoryValue = k.Count * k.Price }).ToListAsync();
+
+            return View(nameof(LimitedProduct),categoryList);
         }
 
         // POST: Products/Create
